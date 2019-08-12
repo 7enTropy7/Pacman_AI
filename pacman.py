@@ -4,6 +4,7 @@ import random
 from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D
+from keras.layers import GlobalMaxPool2D, BatchNormalization, Dropout
 from keras.optimizers import Adam
 
 class Pacman:
@@ -24,17 +25,19 @@ class Pacman:
     def get_model(self):
         model = Sequential()
         # Conv Layers
-        model.add(Conv2D(32, (8, 8), strides=4, padding='same', input_shape=self.state_size))
-        model.add(Activation('relu'))
-        model.add(Conv2D(64, (4, 4), strides=2, padding='same'))
-        model.add(Activation('relu'))
-        model.add(Conv2D(64, (3, 3), strides=1, padding='same'))
-        model.add(Activation('relu'))
-        model.add(Flatten())
+        model.add(Conv2D(64, (3,3), padding="same",input_shape = self.state_size))
+        model.add(Activation("relu"))
+        model.add(BatchNormalization(axis=chanDim))
+        model.add(Conv2D(64, (3,3), padding="same"))
+        model.add(Activation("relu"))
+        model.add(BatchNormalization(axis=chanDim))
+        model.add(MaxPooling2D(pool_size=(2,2)))
+        model.add(Dropout(0.25))
+        model.add(GlobalMaxPool2D())
         # FC Layers
         model.add(Dense(512, activation='relu'))
         model.add(Dense(self.action_size, activation='linear'))
-        model.compile(loss='mse', optimizer=Adam())
+        model.compile(loss='mse', optimizer='nadam')
         return model
     
     def act(self, state):
