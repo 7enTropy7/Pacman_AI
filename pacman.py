@@ -27,10 +27,10 @@ class Pacman:
         # Conv Layers
         model.add(Conv2D(64, (3,3), padding="same",input_shape = self.state_size))
         model.add(Activation("relu"))
-        model.add(BatchNormalization(axis=chanDim))
+        model.add(BatchNormalization())
         model.add(Conv2D(64, (3,3), padding="same"))
         model.add(Activation("relu"))
-        model.add(BatchNormalization(axis=chanDim))
+        model.add(BatchNormalization())
         model.add(MaxPooling2D(pool_size=(2,2)))
         model.add(Dropout(0.25))
         model.add(GlobalMaxPool2D())
